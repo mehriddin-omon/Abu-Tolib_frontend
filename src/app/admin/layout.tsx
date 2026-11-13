@@ -14,9 +14,9 @@ const groups: NavGroup[] = [
   {
     label: 'Kontent',
     items: [
-      { href: '/admin/kontent', label: "Bo'lim va darslar", icon: 'layers', soon: '2' },
-      { href: '/admin/savollar', label: 'Savollar banki', icon: 'db', soon: '2' },
-      { href: '/admin/testlar', label: 'Testlar', icon: 'test', soon: '2' },
+      { href: '/admin/kontent', label: "Bo'lim va darslar", icon: 'layers' },
+      { href: '/admin/savollar', label: 'Savollar banki', icon: 'db' },
+      { href: '/admin/testlar', label: 'Testlar', icon: 'test' },
     ],
   },
 ];

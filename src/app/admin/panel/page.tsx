@@ -2,21 +2,37 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader } from '@/components/app/page-header';
 import { serverApi } from '@/lib/server-api';
-import type { Paginated, User } from '@/lib/types';
+import type { Paginated, Question, SectionTree, TestSummary, User } from '@/lib/types';
 
 export const metadata: Metadata = { title: 'Panel' };
 
 const roadmap = [
   { step: 1, title: 'Poydevor', state: 'done' },
-  { step: 2, title: 'Kontent va savollar banki', state: 'next' },
-  { step: 3, title: 'Diagnostika — talaba MVP', state: 'todo' },
+  { step: 2, title: 'Kontent va savollar banki', state: 'done' },
+  { step: 3, title: 'Diagnostika — talaba MVP', state: 'next' },
   { step: 4, title: 'Yozma ish va AI', state: 'todo' },
   { step: 5, title: 'Statistika va ishga tushirish', state: 'todo' },
 ] as const;
 
 export default async function AdminPanel() {
-  const students = await serverApi<Paginated<User>>('/users?size=1');
+  const [students, sections, questions, tests] = await Promise.all([
+    serverApi<Paginated<User>>('/users?size=1'),
+    serverApi<SectionTree[]>('/admin/sections'),
+    serverApi<Paginated<Question>>('/admin/questions?size=1'),
+    serverApi<TestSummary[]>('/admin/tests'),
+  ]);
   const total = students?.total ?? 0;
+  const lessons = sections?.flatMap((s) => s.lessons) ?? [];
+  const cards = [
+    {
+      href: '/admin/kontent',
+      k: 'Konspekt yozilgan darslar',
+      v: lessons.filter((l) => l.hasBody).length,
+      of: lessons.length,
+    },
+    { href: '/admin/savollar', k: 'Savollar banki', v: questions?.total ?? 0 },
+    { href: '/admin/testlar', k: "E'lon qilingan testlar", v: tests?.filter((t) => t.published).length ?? 0 },
+  ];
 
   return (
     <>
@@ -29,11 +45,18 @@ export default async function AdminPanel() {
           <div className="text-[13px] text-muted-foreground">Ro&apos;yxatdan o&apos;tgan o&apos;quvchilar</div>
           <div className="mt-1.5 text-3xl font-semibold tabular-nums">{total}</div>
         </Link>
-        {['Darslar', 'Savollar', 'Yozma ishlar'].map((k) => (
-          <div key={k} className="rounded-xl border bg-card p-4 shadow-xs">
-            <div className="text-[13px] text-muted-foreground">{k}</div>
-            <div className="mt-1.5 text-3xl font-semibold text-muted-foreground/40">—</div>
-          </div>
+        {cards.map((c) => (
+          <Link
+            key={c.k}
+            href={c.href}
+            className="rounded-xl border bg-card p-4 shadow-xs transition-colors hover:border-ring"
+          >
+            <div className="text-[13px] text-muted-foreground">{c.k}</div>
+            <div className="mt-1.5 text-3xl font-semibold tabular-nums">
+              {c.v}
+              {c.of ? <span className="text-base font-normal text-muted-foreground"> / {c.of}</span> : null}
+            </div>
+          </Link>
         ))}
       </div>
 

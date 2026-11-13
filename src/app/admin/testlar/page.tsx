@@ -1,13 +1,8 @@
 import type { Metadata } from 'next';
-import { ComingSoon, PageHeader } from '@/components/app/page-header';
+import { TestsList } from './tests-list';
 
-export const metadata: Metadata = { title: "Testlar" };
+export const metadata: Metadata = { title: 'Testlar' };
 
 export default function Page() {
-  return (
-    <>
-      <PageHeader title="Testlar" />
-      <ComingSoon step={2} what="Savollar bankidan diagnostika va bo'lim nazorati testlarini yig'ish." />
-    </>
-  );
+  return <TestsList />;
 }
