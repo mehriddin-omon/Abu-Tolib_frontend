@@ -10,6 +10,8 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 const API_INTERNAL = process.env.API_INTERNAL_URL ?? 'http://localhost:4000';
 const PUBLIC_PATHS = ['/', '/kirish'];
+/** Kirgan-kirmaganidan qat'i nazar ochiladi (bot havolasi boshqa akkauntga ham kiritishi mumkin) */
+const OPEN_PATHS = ['/kirish/telegram'];
 
 type Role = 'STUDENT' | 'ADMIN';
 
@@ -45,6 +47,7 @@ const homeFor = (role: Role) => (role === 'ADMIN' ? '/admin/panel' : '/bosh');
 
 export async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
+  if (OPEN_PATHS.includes(pathname)) return NextResponse.next();
   const isPublic = PUBLIC_PATHS.includes(pathname);
 
   let role = readAccess(req.cookies.get('at')?.value)?.role ?? null;

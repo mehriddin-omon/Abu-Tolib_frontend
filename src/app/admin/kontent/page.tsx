@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
-import { ComingSoon, PageHeader } from '@/components/app/page-header';
+import { PageHeader } from '@/components/app/page-header';
+import { ContentTree } from './content-tree';
 
 export const metadata: Metadata = { title: "Bo'lim va darslar" };
 
 export default function Page() {
   return (
     <>
-      <PageHeader title="Bo'lim va darslar" />
-      <ComingSoon step={2} what="14 bo'lim × 12 dars, dars kodlari va konspekt tahriri (Markdown + formulalar)." />
+      <PageHeader
+        title="Bo'lim va darslar"
+        description="14 bo'lim × 12 dars. Dars kodlari muzlatilgan — savollar shu kodlarga bog'lanadi."
+      />
+      <ContentTree />
     </>
   );
 }
