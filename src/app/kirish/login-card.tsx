@@ -78,7 +78,10 @@ export function LoginCard({ devLogin }: { devLogin: boolean }) {
       const login = await api<StartedLogin>('/auth/telegram/start', { method: 'POST' });
       if (!login.deepLink) {
         win?.close();
-        setPhase({ kind: 'error', message: 'Telegram bot hali sozlanmagan.' });
+        setPhase({
+          kind: 'error',
+          message: "Telegram bot ulanmagan: backend .env faylida TELEGRAM_BOT_TOKEN ni tekshiring.",
+        });
         return;
       }
       if (win) win.location.href = login.deepLink;
@@ -121,7 +124,8 @@ export function LoginCard({ devLogin }: { devLogin: boolean }) {
                 <Step n={2} /> Birinchi marta bo&apos;lsa, telefon raqamingizni yuboring.
               </li>
               <li className="flex gap-2">
-                <Step n={3} /> Shu sahifaga qayting — u o&apos;zi ochiladi.
+                <Step n={3} /> Shu sahifaga qayting — u o&apos;zi ochiladi. Yoki botdagi «Saytga qaytish»
+                tugmasini bosing.
               </li>
             </ol>
             <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2.5 text-sm text-muted-foreground">
